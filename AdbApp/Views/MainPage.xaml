@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AdbApp.Views.MainPage"
+             Title="{Binding Title}"
+             Padding="2">
+
+    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <Label Text="Welcome to Xamarin Forms and Prism!" />
+        <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+            <Button Text="Get adb logs" Command="{Binding Path=GetAdbLogCommand}" />
+            <Entry Text="{Binding Path=Params,Mode=TwoWay}" HorizontalOptions="FillAndExpand" />
+        </StackLayout>
+        <ListView ItemsSource="{Binding Path=Logs,Mode=TwoWay}" >
+            
+        </ListView>
+    </StackLayout>
+
+</ContentPage>

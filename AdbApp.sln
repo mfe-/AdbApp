@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdbApp", "AdbApp\AdbApp.csproj", "{ACC161C6-7CA9-42CA-9141-E38F3E69BAD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdbApp.Android", "AdbApp.Android\AdbApp.Android.csproj", "{954FEDAB-C1D2-4199-A29C-461C456F6219}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ACC161C6-7CA9-42CA-9141-E38F3E69BAD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACC161C6-7CA9-42CA-9141-E38F3E69BAD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACC161C6-7CA9-42CA-9141-E38F3E69BAD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACC161C6-7CA9-42CA-9141-E38F3E69BAD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{954FEDAB-C1D2-4199-A29C-461C456F6219}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{954FEDAB-C1D2-4199-A29C-461C456F6219}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{954FEDAB-C1D2-4199-A29C-461C456F6219}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{954FEDAB-C1D2-4199-A29C-461C456F6219}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{954FEDAB-C1D2-4199-A29C-461C456F6219}.Release|Any CPU.Build.0 = Release|Any CPU
+		{954FEDAB-C1D2-4199-A29C-461C456F6219}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E23DDC01-46DA-4741-B46F-122F5245B021}
+	EndGlobalSection
+EndGlobal
