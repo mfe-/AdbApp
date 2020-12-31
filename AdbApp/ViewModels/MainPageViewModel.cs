@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Input;
 
 namespace AdbApp.ViewModels
@@ -14,46 +15,71 @@ namespace AdbApp.ViewModels
     public class MainPageViewModel : ViewModelBase
     {
         private readonly IAdbService adbService;
-        private readonly IDialogService dialogService;
 
-        public MainPageViewModel(INavigationService navigationService, IAdbService adbService, IDialogService dialogService)
+        public MainPageViewModel(INavigationService navigationService, IAdbService adbService)
             : base(navigationService)
         {
-            Title = "Log Page";
-            Params = "logcat";
+            Title = "adb Page";
+            this._Params = "logcat -D *:E";
+            this._Output = new ObservableCollection<string>();
+            this.GetAdbCommand = new DelegateCommand<string>(OnGetAdbCommandAsync);
+            this.CancelCommand = new DelegateCommand(OnCancelCommand);
+            this.ClearCommand = new DelegateCommand(OnClearCommand);
             this.adbService = adbService;
-            this.dialogService = dialogService;
         }
 
-        private ObservableCollection<string> _Logs;
-        public ObservableCollection<string> Logs
+        private ObservableCollection<string> _Output;
+        public ObservableCollection<string> Output
         {
-            get { return _Logs; }
-            set { SetProperty(ref _Logs, value, nameof(Logs)); }
+            get { return _Output; }
+            set { SetProperty(ref _Output, value, nameof(Output)); }
         }
 
 
-        private String _Params;
-        public String Params
+        private string _Params;
+        public string Params
         {
             get { return _Params; }
             set { SetProperty(ref _Params, value, nameof(Params)); }
         }
 
-        private ICommand _GetAdbLogCommand;
+        public ICommand GetAdbCommand { get; }
 
-        public ICommand GetAdbLogCommand => _GetAdbLogCommand ?? (_GetAdbLogCommand = new DelegateCommand(OnGetAdbLogCommand));
+        private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
-        protected void OnGetAdbLogCommand()
+        protected async void OnGetAdbCommandAsync(string param)
         {
             try
             {
-                adbService.GetAdbLog("");
+                await semaphoreSlim.WaitAsync();
+                adbService.StopAdbOutputAsync();
+                var list = await adbService.GetAdbOutputAsync(param, s => Output.Insert(0, s));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                dialogService.ShowDialog(e.ToString());
+                Output.Clear();
+                Output.Add(e.ToString());
             }
+            finally
+            {
+                semaphoreSlim.Release();
+            }
+        }
+
+        public ICommand ClearCommand { get; }
+
+        protected void OnClearCommand()
+        {
+            Output.Clear();
+        }
+
+        public ICommand CancelCommand { get; }
+
+        protected void OnCancelCommand()
+        {
+            adbService.StopAdbOutputAsync();
+            
+
         }
     }
 }

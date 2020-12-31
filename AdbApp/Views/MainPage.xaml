@@ -8,11 +8,33 @@
     <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <Label Text="Welcome to Xamarin Forms and Prism!" />
         <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
-            <Button Text="Get adb logs" Command="{Binding Path=GetAdbLogCommand}" />
-            <Entry Text="{Binding Path=Params,Mode=TwoWay}" HorizontalOptions="FillAndExpand" />
+            <Button Text="fire command" 
+                    Command="{Binding Path=GetAdbCommand}" 
+                    CommandParameter="{Binding Path=Params}" />
+            <Entry Text="{Binding Path=Params,Mode=TwoWay}" 
+                   HorizontalOptions="FillAndExpand" />
         </StackLayout>
-        <ListView ItemsSource="{Binding Path=Logs,Mode=TwoWay}" >
-            
+        <StackLayout Orientation="Horizontal">
+            <Button Text="Cancel" Command="{Binding Path=CancelCommand}" />
+            <Button Text="Clear" Command="{Binding Path=ClearCommand}" />
+            <Label Text="{Binding Path=Output.Count,Mode=OneWay}" />
+        </StackLayout>
+        <ListView ItemsSource="{Binding Path=Output,Mode=TwoWay}"
+                  HorizontalOptions="StartAndExpand"
+                  FlowDirection="LeftToRight"
+                  HorizontalScrollBarVisibility="Always"
+                  VerticalScrollBarVisibility="Always" >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell IsEnabled="False">
+                        <Label Text="{Binding}"
+                               FlowDirection="LeftToRight"
+                               HorizontalOptions="StartAndExpand" 
+                               LineBreakMode="NoWrap" />
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
         </ListView>
     </StackLayout>
 

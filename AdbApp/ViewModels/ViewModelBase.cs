@@ -21,6 +21,7 @@ namespace AdbApp.ViewModels
         public ViewModelBase(INavigationService navigationService)
         {
             NavigationService = navigationService;
+            _title = String.Empty;
         }
 
         public virtual void Initialize(INavigationParameters parameters)
