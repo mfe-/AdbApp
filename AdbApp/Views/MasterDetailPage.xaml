@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  x:Class="AdbApp.Views.MasterDetailPage">
+    <MasterDetailPage.Master>
+        <ContentPage Title="Menu"
+            Padding="0,40,0,0"
+            IconImageSource="{OnPlatform iOS='hamburger.png'}">
+            <StackLayout>
+                <Button Text="Main Page"
+                Command="{Binding NavigateCommand}"
+                CommandParameter="MainPage" />
+                <Button Text="Predefined Command Page"
+                Command="{Binding NavigateCommand}"
+                CommandParameter="PredefinedCommandPage" />
+            </StackLayout>
+        </ContentPage>
+    </MasterDetailPage.Master>
+</MasterDetailPage>

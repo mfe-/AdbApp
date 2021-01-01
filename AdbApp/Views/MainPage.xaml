@@ -17,7 +17,7 @@
         <StackLayout Orientation="Horizontal">
             <Button Text="Cancel" Command="{Binding Path=CancelCommand}" />
             <Button Text="Clear" Command="{Binding Path=ClearCommand}" />
-            <Label Text="{Binding Path=Output.Count,Mode=OneWay}" />
+            <Label VerticalOptions="Center" Text="{Binding Path=Output.Count,Mode=OneWay,StringFormat='Entries {0}'}" />
         </StackLayout>
         <ListView ItemsSource="{Binding Path=Output,Mode=TwoWay}"
                   HorizontalOptions="StartAndExpand"
@@ -30,11 +30,10 @@
                         <Label Text="{Binding}"
                                FlowDirection="LeftToRight"
                                HorizontalOptions="StartAndExpand" 
-                               LineBreakMode="NoWrap" />
+                               LineBreakMode="CharacterWrap" />
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
-
         </ListView>
     </StackLayout>
 

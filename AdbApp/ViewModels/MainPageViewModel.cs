@@ -20,7 +20,7 @@ namespace AdbApp.ViewModels
             : base(navigationService)
         {
             Title = "adb Page";
-            this._Params = "logcat -D *:E";
+            this._Params = "logcat -D *:W";
             this._Output = new ObservableCollection<string>();
             this.GetAdbCommand = new DelegateCommand<string>(OnGetAdbCommandAsync);
             this.CancelCommand = new DelegateCommand(OnCancelCommand);

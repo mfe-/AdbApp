@@ -13,7 +13,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-[assembly: UsesPermission(Name = "android.permission.READ_LOGS")]
 namespace AdbApp.Droid
 {
     public class AdbService : IAdbService
