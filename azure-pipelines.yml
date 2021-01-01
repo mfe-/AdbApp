@@ -85,7 +85,7 @@ steps:
   name: signingCert
   displayName: 'Download certificate'
   inputs:
-   secureFile: '$(signingCert.secureFilePath)'
+   secureFile: 'get.keystore'
 
 - task: XamarinAndroid@1
   inputs:
