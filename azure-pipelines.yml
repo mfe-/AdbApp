@@ -85,14 +85,14 @@ steps:
   name: signingCert
   displayName: 'Download certificate'
   inputs:
-   secureFile: 'get.keystore'
+   secureFile: '$(signingCert.secureFilePath)'
 
 - task: XamarinAndroid@1
   inputs:
     projectFile: '**/*droid*.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
-    msbuildArguments: '-t:SignAndroidPackage -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=$(keyStore.secureFilePath) -p:AndroidSigningStorePass=$(keystore.password) -p:AndroidSigningKeyAlias=$(key.alias) -p:AndroidSigningKeyPass=$(key.password)'
+    msbuildArguments: '-t:SignAndroidPackage -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=$(signingCert.secureFilePath) -p:AndroidSigningStorePass=$(keystore.password) -p:AndroidSigningKeyAlias=$(key.alias) -p:AndroidSigningKeyPass=$(key.password)'
 
 - task: CopyFiles@2
   displayName: 'Copy deliverables'
