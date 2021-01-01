@@ -87,11 +87,18 @@ steps:
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
 
+- task: CmdLine@2
+  inputs:
+    script: |
+      echo Write your commands here
+      
+      echo $(outputDirectory)
+
 - task: CopyFiles@2
   displayName: 'Copy deliverables'
   inputs:
     SourceFolder: '$(outputDirectory)'
-    Contents: '*.aab'
+    Contents: '*.apk'
     TargetFolder: 'drop'
 
 - task: PublishBuildArtifacts@1
