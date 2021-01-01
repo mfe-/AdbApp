@@ -1,9 +1,9 @@
 ﻿
 namespace AdbApp.Views
 {
-    public partial class MainPage
+    public partial class AdbPage
     {
-        public MainPage()
+        public AdbPage()
         {
             InitializeComponent();
         }

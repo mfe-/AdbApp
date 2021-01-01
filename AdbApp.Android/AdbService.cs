@@ -63,7 +63,8 @@ namespace AdbApp.Droid
             {
                 //wait one second for ReadAsync to return otherwise cancel
                 Task<int> readAsyncTask = bufferedReader.ReadAsync(buffer, 0, buffer.Length);
-                var completedTask = await Task.WhenAny(readAsyncTask, Task.Delay(TimeSpan.FromSeconds(1), cancellationTokenSource.Token));
+                var completedTask = await Task.WhenAny(readAsyncTask, Task.Delay(TimeSpan.FromSeconds(1), 
+                    cancellationTokenSource.Token));
                 if (completedTask != readAsyncTask)
                 {
                     readAmountChars = 0;
@@ -85,7 +86,7 @@ namespace AdbApp.Droid
                     {
                         s = stringBuilder.ToString();
                         callback?.Invoke(s);
-                        logs.Insert(0, s);
+                        logs.Add(s);
                         stringBuilder.Clear();
                     }
                 }

@@ -12,11 +12,11 @@ using System.Windows.Input;
 
 namespace AdbApp.ViewModels
 {
-    public class MainPageViewModel : ViewModelBase
+    public class AdbPageViewModel : ViewModelBase
     {
         private readonly IAdbService adbService;
 
-        public MainPageViewModel(INavigationService navigationService, IAdbService adbService)
+        public AdbPageViewModel(INavigationService navigationService, IAdbService adbService)
             : base(navigationService)
         {
             Title = "adb Page";
@@ -53,7 +53,7 @@ namespace AdbApp.ViewModels
             {
                 await semaphoreSlim.WaitAsync();
                 adbService.StopAdbOutputAsync();
-                var list = await adbService.GetAdbOutputAsync(param, s => Output.Insert(0, s));
+                var list = await adbService.GetAdbOutputAsync(param, s => Output.Add(s));
             }
             catch (Exception e)
             {

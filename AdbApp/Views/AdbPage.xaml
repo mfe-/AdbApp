@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AdbApp.Views.AdbPage"
+             xmlns:local="clr-namespace:AdbApp.Views"
+             Title="{Binding Title}"
+             Padding="2">
+
+    <StackLayout>
+        <ListView ItemsSource="{Binding Path=Output,Mode=TwoWay}"
+                  VerticalOptions="StartAndExpand"
+                  HorizontalOptions="StartAndExpand"
+                  local:ScrollToBottom.Enable="True"
+                  FlowDirection="LeftToRight"
+                  HorizontalScrollBarVisibility="Always"
+                  VerticalScrollBarVisibility="Always">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell IsEnabled="False">
+                        <Label Text="{Binding}"
+                               FlowDirection="LeftToRight"
+                               HorizontalOptions="StartAndExpand" 
+                               LineBreakMode="CharacterWrap" />
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+            <Button Text="fire command" 
+                    Command="{Binding Path=GetAdbCommand}" 
+                    CommandParameter="{Binding Path=Params}" />
+            <Entry Text="{Binding Path=Params,Mode=TwoWay}" 
+                   HorizontalOptions="FillAndExpand" />
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Button Text="Cancel" Command="{Binding Path=CancelCommand}" />
+            <Button Text="Clear" Command="{Binding Path=ClearCommand}" />
+            <Label VerticalOptions="Center" Text="{Binding Path=Output.Count,Mode=OneWay,StringFormat='Entries {0}'}" />
+        </StackLayout>
+    </StackLayout>
+
+</ContentPage>

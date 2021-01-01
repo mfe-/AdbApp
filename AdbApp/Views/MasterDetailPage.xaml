@@ -9,7 +9,7 @@
             <StackLayout>
                 <Button Text="Main Page"
                 Command="{Binding NavigateCommand}"
-                CommandParameter="MainPage" />
+                CommandParameter="AdbPage" />
                 <Button Text="Predefined Command Page"
                 Command="{Binding NavigateCommand}"
                 CommandParameter="PredefinedCommandPage" />

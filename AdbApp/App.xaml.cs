@@ -21,7 +21,7 @@ namespace AdbApp
 
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("/MasterDetailPage/NavigationPage/MainPage");
+            await NavigationService.NavigateAsync("/MasterDetailPage/NavigationPage/AdbPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -30,7 +30,7 @@ namespace AdbApp
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<Views.MasterDetailPage, MasterDetailPageViewModel>();
-            containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
+            containerRegistry.RegisterForNavigation<AdbPage, AdbPageViewModel>();
             containerRegistry.RegisterForNavigation<PredefinedCommandPage, PredefinedCommandPageViewModel>();
         }
     }
