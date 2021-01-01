@@ -63,6 +63,10 @@ namespace AdbApp.ViewModels
                 adbService.StopAdbOutputAsync();
                 _ = await adbService.GetAdbOutputAsync(param, s => Output.Add(s));
             }
+            catch(ArgumentException)
+            {
+                //param is empty
+            }
             catch (Exception e)
             {
                 Output.Clear();

@@ -24,6 +24,7 @@ namespace AdbApp.Droid
         private CancellationTokenSource? cancellationTokenSource;
         public async Task<IList<string>> GetAdbOutputAsync(string param, Action<string>? callback = null)
         {
+            if (string.IsNullOrEmpty(param)) throw new ArgumentException(nameof(param));
             using (cancellationTokenSource = new CancellationTokenSource())
             {
                 string[] commandParameter = param.Split(" ").Where(a => a != string.Empty).ToArray();

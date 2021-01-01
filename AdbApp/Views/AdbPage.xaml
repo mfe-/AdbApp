@@ -8,19 +8,23 @@
 
     <StackLayout>
         <ListView ItemsSource="{Binding Path=Output,Mode=TwoWay}"
-                  VerticalOptions="StartAndExpand"
+                  VerticalOptions="FillAndExpand"
                   HorizontalOptions="StartAndExpand"
                   local:ScrollToBottom.Enable="{Binding Path=ProcessingAdbOutput,Mode=TwoWay}"
                   FlowDirection="LeftToRight"
                   HorizontalScrollBarVisibility="Always"
-                  VerticalScrollBarVisibility="Always">
+                  VerticalScrollBarVisibility="Always"
+            
+                  HasUnevenRows="True">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell IsEnabled="False">
-                        <Label Text="{Binding}"
+                        <StackLayout VerticalOptions="FillAndExpand">
+                            <Label Text="{Binding}"
                                FlowDirection="LeftToRight"
                                HorizontalOptions="StartAndExpand" 
                                LineBreakMode="CharacterWrap" />
+                        </StackLayout>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
