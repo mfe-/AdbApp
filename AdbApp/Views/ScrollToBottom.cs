@@ -1,21 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace AdbApp.Views
 {
     public class ScrollToBottom
     {
-
         public static readonly BindableProperty EnableProperty =
             BindableProperty.CreateAttached("Enable", typeof(bool), typeof(ScrollToBottom), false, propertyChanged: ScrollToBottomPropertyChanged);
 
         public static void ScrollToBottomPropertyChanged(BindableObject bindableObject, object oldValue, object newValue)
         {
-            if(bindableObject is ListView listView)
+            if (bindableObject is ListView listView)
             {
-                listView.ItemAppearing += ListView_ItemAppearing;
+                if (newValue is bool a && a == true)
+                {
+                    listView.ItemAppearing += ListView_ItemAppearing;
+                }
+                else
+                {
+                    listView.ItemAppearing -= ListView_ItemAppearing;
+                }
             }
         }
 
@@ -23,10 +26,7 @@ namespace AdbApp.Views
         {
             if (sender is ListView listView)
             {
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    listView.ScrollTo(e.Item, ScrollToPosition.MakeVisible, false);
-                });
+                Device.BeginInvokeOnMainThread(() => listView.ScrollTo(e.Item, ScrollToPosition.MakeVisible, false));
             }
         }
 

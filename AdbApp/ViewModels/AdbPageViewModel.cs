@@ -43,6 +43,13 @@ namespace AdbApp.ViewModels
             set { SetProperty(ref _Params, value, nameof(Params)); }
         }
 
+        private bool _ProcessingAdbOutput;
+        public bool ProcessingAdbOutput
+        {
+            get { return _ProcessingAdbOutput; }
+            set { SetProperty(ref _ProcessingAdbOutput, value, nameof(ProcessingAdbOutput)); }
+        }
+
         public ICommand GetAdbCommand { get; }
 
         private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
@@ -52,8 +59,9 @@ namespace AdbApp.ViewModels
             try
             {
                 await semaphoreSlim.WaitAsync();
+                ProcessingAdbOutput = true;
                 adbService.StopAdbOutputAsync();
-                var list = await adbService.GetAdbOutputAsync(param, s => Output.Add(s));
+                _ = await adbService.GetAdbOutputAsync(param, s => Output.Add(s));
             }
             catch (Exception e)
             {
@@ -62,6 +70,7 @@ namespace AdbApp.ViewModels
             }
             finally
             {
+                ProcessingAdbOutput = false;
                 semaphoreSlim.Release();
             }
         }
@@ -78,7 +87,7 @@ namespace AdbApp.ViewModels
         protected void OnCancelCommand()
         {
             adbService.StopAdbOutputAsync();
-            
+            ProcessingAdbOutput = false;
 
         }
     }

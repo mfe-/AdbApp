@@ -8,7 +8,9 @@ using Java.IO;
 using Java.Lang;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +34,7 @@ namespace AdbApp.Droid
                 {
                     if (!System.String.IsNullOrWhiteSpace(workingDir))
                     {
-                        processBuilder.Directory(new File(workingDir));
+                        processBuilder.Directory(new Java.IO.File(workingDir));
                     }
 
                     processBuilder.RedirectErrorStream(true);
@@ -51,7 +53,6 @@ namespace AdbApp.Droid
                 cancellationTokenSource = null;
                 return logs;
             }
-
         }
         private async Task ReadStreamAsync(Reader bufferedReader, IList<string> logs, Action<string>? callback = null, CancellationToken? cancellationToken = null)
         {
