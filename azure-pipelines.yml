@@ -81,18 +81,18 @@ steps:
           Write-Warning "No Assembly Info Files found."
       }
 
+- task: DownloadSecureFile@1
+  name: signingCert
+  displayName: 'Download certificate'
+  inputs:
+   secureFile: '$(signingCert.secureFilePath)'
+
 - task: XamarinAndroid@1
   inputs:
     projectFile: '**/*droid*.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
-
-- task: CmdLine@2
-  inputs:
-    script: |
-      echo Write your commands here
-      
-      echo $(outputDirectory)
+    msbuildArguments: '-t:SignAndroidPackage -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=$(keyStore.secureFilePath) -p:AndroidSigningStorePass=$(keystore.password) -p:AndroidSigningKeyAlias=$(key.alias) -p:AndroidSigningKeyPass=$(key.password)'
 
 - task: CopyFiles@2
   displayName: 'Copy deliverables'
