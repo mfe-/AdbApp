@@ -13,6 +13,9 @@
                 <Button Text="Predefined Command Page"
                 Command="{Binding NavigateCommand}"
                 CommandParameter="PredefinedCommandPage" />
+                <Button Text="About Page"
+                Command="{Binding NavigateCommand}"
+                CommandParameter="AboutPage" />
             </StackLayout>
         </ContentPage>
     </MasterDetailPage.Master>

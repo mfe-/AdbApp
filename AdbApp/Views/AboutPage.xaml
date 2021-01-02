@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AdbApp.Views.AboutPage">
+    <ContentPage.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="Large" />
+        </Style>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="About the app: execute shell commands on your device! 
+                   All commands are executed in the security context of this app.
+                   This means, system commands will not work and may result in no output."  />
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Click " />
+                        <Span Text="here"
+                          TextColor="Blue"
+                          TextDecorations="Underline">
+                            <Span.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                  CommandParameter="https://github.com/mfe-/AdbApp" />
+                            </Span.GestureRecognizers>
+                        </Span>
+                        <Span Text=" to view the sourcecode of the app." />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Visit us: " />
+                        <Span Text="https://get-the-solution.net"
+                          TextColor="Blue"
+                          TextDecorations="Underline">
+                            <Span.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding TapCommand}"
+                                                  CommandParameter="https://get-the-solution.net" />
+                            </Span.GestureRecognizers>
+                        </Span>
+                        <Span Text=" to view the sourcecode." />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

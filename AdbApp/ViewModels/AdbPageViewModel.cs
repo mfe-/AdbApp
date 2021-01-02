@@ -61,6 +61,7 @@ namespace AdbApp.ViewModels
                 await semaphoreSlim.WaitAsync();
                 ProcessingAdbOutput = true;
                 adbService.StopAdbOutputAsync();
+                Output.Add(param);
                 _ = await adbService.GetAdbOutputAsync(param, s => Output.Add(s));
             }
             catch(ArgumentException)

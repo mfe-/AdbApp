@@ -4,7 +4,7 @@
              x:Class="AdbApp.Views.PredefinedCommandPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
+            <Label Text="app logo by John Gardner"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
         </StackLayout>

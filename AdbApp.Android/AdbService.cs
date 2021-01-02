@@ -102,7 +102,15 @@ namespace AdbApp.Droid
 
         void IAdbService.StopAdbOutputAsync()
         {
-            cancellationTokenSource?.Cancel();
+            try
+            {
+                cancellationTokenSource?.Cancel();
+            }
+            catch(ObjectDisposedException)
+            {
+
+            }
+            
         }
     }
 }
