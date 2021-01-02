@@ -19,7 +19,7 @@ namespace AdbApp.ViewModels
         public AdbPageViewModel(INavigationService navigationService, IAdbService adbService)
             : base(navigationService)
         {
-            Title = "adb Page";
+            Title = "adb shell";
             this._Params = "logcat -D *:W";
             this._Output = new ObservableCollection<string>();
             this.GetAdbCommand = new DelegateCommand<string>(OnGetAdbCommandAsync);
