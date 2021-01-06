@@ -97,7 +97,12 @@ steps:
 - task: CopyFiles@2
   displayName: 'Copy deliverables'
   inputs:
-    SourceFolder: '$(outputDirectory)'
+    SourceFolder: '- task: GooglePlayRelease@3
+  inputs:
+    serviceConnection: 'googleplay'
+    apkFile: '$(outputDirectory)/**.apk'
+    track: 'internal'
+    rolloutToUserFraction: true'
     Contents: '*.apk'
     TargetFolder: 'drop'
 
@@ -106,3 +111,4 @@ steps:
   inputs:
     pathToPublish: 'drop'
     artifactName: 'release'
+
