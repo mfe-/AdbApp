@@ -94,7 +94,7 @@ steps:
     projectFile: '**/*droid*.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
-    msbuildArguments: '>-
+    msbuildArguments: '
      t:SignAndroidPackage 
     -p:AndroidKeyStore=True 
     -p:AndroidSigningKeyStore=$(signingCert.secureFilePath) 
