@@ -96,8 +96,7 @@ steps:
     VersionNameFormat: '{1}.{2}'
     Injectversioncode: false
     VersionCodeFormat: '{3}'
-    Injectversion: false
-    VersionRegex: '\d+\.\d+\.\d+'
+    Injectversion: true
     FilenamePattern: 'AndroidManifest.xml'
     OutputVersion: 'OutputedVersion'
 
