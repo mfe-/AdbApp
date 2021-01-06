@@ -3,9 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdbApp", "AdbApp\AdbApp.csproj", "{ACC161C6-7CA9-42CA-9141-E38F3E69BAD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdbApp", "AdbApp\AdbApp.csproj", "{ACC161C6-7CA9-42CA-9141-E38F3E69BAD3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdbApp.Android", "AdbApp.Android\AdbApp.Android.csproj", "{954FEDAB-C1D2-4199-A29C-461C456F6219}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6768249E-8D8B-46B4-8426-FE79AB7683CD}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
