@@ -89,6 +89,18 @@ steps:
   inputs:
    secureFile: '$(signingCert.secureFilePath)'
 
+- task: VersionAndroidManifest@2
+  inputs:
+    Path: '$(Build.SourcesDirectory)'
+    VersionNumber: '$(Build.BuildNumber)'
+    VersionNameFormat: '{1}.{2}'
+    Injectversioncode: true
+    VersionCode: '$version'
+    Injectversion: false
+    VersionRegex: '\d+\.\d+\.\d+'
+    FilenamePattern: 'AndroidManifest.xml'
+    OutputVersion: 'OutputedVersion'
+
 - task: XamarinAndroid@1
   inputs:
     projectFile: '**/*droid*.csproj'
