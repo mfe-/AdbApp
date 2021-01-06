@@ -17,6 +17,8 @@ variables:
     value: '$(build.binariesDirectory)/$(buildConfiguration)'
   - name: BuildID
     value: '$(Build.BuildID)'
+  - name: packageFormat
+    value: aab
 
 steps:
 - checkout: self
@@ -92,13 +94,20 @@ steps:
     projectFile: '**/*droid*.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
-    msbuildArguments: '-t:SignAndroidPackage -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=$(signingCert.secureFilePath) -p:AndroidSigningStorePass=$(keystore.password) -p:AndroidSigningKeyAlias=$(key.alias) -p:AndroidSigningKeyPass=$(key.password)'
+    msbuildArguments: '>-
+     t:SignAndroidPackage 
+    -p:AndroidKeyStore=True 
+    -p:AndroidSigningKeyStore=$(signingCert.secureFilePath) 
+    -p:AndroidSigningStorePass=$(keystore.password) 
+    -p:AndroidSigningKeyAlias=$(key.alias) 
+    -p:AndroidSigningKeyPass=$(key.password)
+    -p:AndroidPackageFormat=$(packageFormat)'
 
 - task: 'CopyFiles@2'
   displayName: 'Copy deliverables'
   inputs:
     SourceFolder: '$(outputDirectory)'
-    Contents: '*.apk'
+    Contents: '*.$(packageFormat)'
     TargetFolder: 'drop'
 
 - task: PublishBuildArtifacts@1
@@ -111,5 +120,5 @@ steps:
   inputs:
     serviceConnection: 'googleplay'
     applicationId: 'get.the.solution.AdbApp'
-    bundleFile: '**/*-Signed.apk'
+    bundleFile: '**/*-Signed.$(packageFormat)'
     track: 'production'
