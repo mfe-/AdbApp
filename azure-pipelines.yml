@@ -89,12 +89,12 @@ steps:
 
 - task: XamarinAndroid@1
   inputs:
-    projectFile: '
+    projectFile: '**/*droid*.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
     msbuildArguments: '-t:SignAndroidPackage -p:AndroidKeyStore=True -p:AndroidSigningKeyStore=$(signingCert.secureFilePath) -p:AndroidSigningStorePass=$(keystore.password) -p:AndroidSigningKeyAlias=$(key.alias) -p:AndroidSigningKeyPass=$(key.password)'
 
-- task: CopyFiles@2'
+- task: 'CopyFiles@2'
   displayName: 'Copy deliverables'
   inputs:
     SourceFolder: '$(outputDirectory)'
