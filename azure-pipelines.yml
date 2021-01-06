@@ -59,6 +59,7 @@ steps:
       Write-Host "Set version: $(version)"
       $version = "$(version)"
       $outputversion = "$(version)"
+      $build="$(BuildID)"
       $packageManifest = "AndroidManifest.xml"
 
       # Apply the version to the assembly property files
@@ -77,7 +78,7 @@ steps:
               {
                   $xml = [xml](Get-Content($file))
                   $xml.manifest.versionName = $version
-                  $xml.manifest.versionCode = $(BuildID)
+                  $xml.manifest.versionCode = $build
                   $xml.Save($file)
               }
               else
