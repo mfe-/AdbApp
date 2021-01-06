@@ -95,7 +95,7 @@ steps:
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
     msbuildArguments: '
-     t:SignAndroidPackage 
+    -t:SignAndroidPackage 
     -p:AndroidKeyStore=True 
     -p:AndroidSigningKeyStore=$(signingCert.secureFilePath) 
     -p:AndroidSigningStorePass=$(keystore.password) 
