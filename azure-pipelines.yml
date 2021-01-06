@@ -94,8 +94,8 @@ steps:
     Path: '$(Build.SourcesDirectory)'
     VersionNumber: '$(Build.BuildNumber)'
     VersionNameFormat: '{1}.{2}'
-    Injectversioncode: true
-    VersionCode: '$version'
+    Injectversioncode: false
+    VersionCodeFormat: '{3}'
     Injectversion: false
     VersionRegex: '\d+\.\d+\.\d+'
     FilenamePattern: 'AndroidManifest.xml'
