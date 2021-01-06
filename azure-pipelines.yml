@@ -51,7 +51,7 @@ steps:
     restoreSolution: '**/*.sln'
 
 - task: PowerShell@2
-  displayName: 'pump version to $(version)'
+  displayName: 'pump AndroidManifest,AssemblyInfo version to $version'
   inputs:
     workingDirectory: '$(Build.SourcesDirectory)'
     targetType: 'inline'
@@ -59,12 +59,13 @@ steps:
       Write-Host "Set version: $(version)"
       $version = "$(version)"
       $outputversion = "$(version)"
+      $packageManifest = "AndroidManifest.xml"
 
       # Apply the version to the assembly property files
       $VersionRegex = "\d+\.\d+\.\d+\.\d+"
       $assemblyInfoFiles = gci . -recurse -include "*Properties*","My Project" | 
           ?{ $_.PSIsContainer } | 
-          foreach { gci -Path $_.FullName -Recurse -include AssemblyInfo.* }
+          foreach { gci -Path $_.FullName -Recurse -include AssemblyInfo.*, $packageManifest }
       
       if($assemblyInfoFiles)
       {
@@ -72,9 +73,17 @@ steps:
       
           foreach ($file in $assemblyInfoFiles) {
               $filecontent = Get-Content($file)
-              attrib $file -r
-              $filecontent -replace $VersionRegex, $version  | Out-File $file utf8
-      
+              if($file.Name -eq $packageManifest)
+              {
+                  $xml = [xml](Get-Content($file))
+                  $xml.manifest.versionName = $version
+                  $xml.Save($file)
+              }
+              else
+              {
+                  attrib $file -r
+                  $filecontent -replace $VersionRegex, $version  | Out-File $file utf8
+              }
               Write-Host "$file.FullName - $version version applied"
           }
       }
@@ -88,18 +97,6 @@ steps:
   displayName: 'Download certificate'
   inputs:
    secureFile: '$(signingCert.secureFilePath)'
-
-- task: VersionAndroidManifest@2
-  inputs:
-    Path: '$(Build.SourcesDirectory)'
-    VersionNumber: '$(Build.BuildNumber)'
-    VersionNameFormat: '{1}.{2}'
-    Injectversioncode: true
-    VersionCode: '$(version)'
-    Injectversion: false
-    VersionRegex: '\d+\.\d+\.\d+\.\d+'
-    FilenamePattern: 'AndroidManifest.xml'
-    OutputVersion: 'OutputedVersion'
 
 - task: XamarinAndroid@1
   inputs:
