@@ -45,10 +45,13 @@ namespace AdbApp.Droid
             CheckAndAddPermission(permissions, Manifest.Permission.KillBackgroundProcesses);
             //CheckAndAddPermission(permissions, Manifest.Permission.PackageUsageStats);
             CheckAndAddPermission(permissions, Manifest.Permission.ReadExternalStorage);
+            //for reading logs - permission is restricted for firmware manufacturers 
             CheckAndAddPermission(permissions, Manifest.Permission.ReadLogs);
             //CheckAndAddPermission(permissions, Manifest.Permission.Reboot);
             CheckAndAddPermission(permissions, Manifest.Permission.ReceiveBootCompleted);
             CheckAndAddPermission(permissions, Manifest.Permission.RestartPackages);
+            //required for dumpsys - permission is restricted for firmware manufacturers 
+            CheckAndAddPermission(permissions, Manifest.Permission.Dump);
             //CheckAndAddPermission(permissions, Manifest.Permission.SetDebugApp);
             //CheckAndAddPermission(permissions, Manifest.Permission.UpdateDeviceStats);
             CheckAndAddPermission(permissions, Manifest.Permission.WriteExternalStorage);
