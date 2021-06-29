@@ -21,8 +21,13 @@ namespace AdbApp.Droid
     {
         private const int bufferSize = 128;
 
-        private CancellationTokenSource? cancellationTokenSource;
-        public async Task<IList<string>> GetAdbOutputAsync(string param, Action<string>? callback = null)
+        private CancellationTokenSource cancellationTokenSource;
+
+        public AdbService()
+        {
+        }
+
+        public async Task<IList<string>> GetAdbOutputAsync(string param, Action<string> callback = null)
         {
             if (string.IsNullOrEmpty(param)) throw new ArgumentException(nameof(param));
             using (cancellationTokenSource = new CancellationTokenSource())
@@ -55,7 +60,7 @@ namespace AdbApp.Droid
                 return logs;
             }
         }
-        private async Task ReadStreamAsync(Reader bufferedReader, IList<string> logs, Action<string>? callback = null, CancellationToken? cancellationToken = null)
+        private async Task ReadStreamAsync(Reader bufferedReader, IList<string> logs, Action<string> callback = null, CancellationToken? cancellationToken = null)
         {
             string s;
             char[] buffer = new char[bufferSize];
@@ -65,7 +70,7 @@ namespace AdbApp.Droid
             {
                 //wait one second for ReadAsync to return otherwise cancel
                 Task<int> readAsyncTask = bufferedReader.ReadAsync(buffer, 0, buffer.Length);
-                var completedTask = await Task.WhenAny(readAsyncTask, Task.Delay(TimeSpan.FromSeconds(1), 
+                var completedTask = await Task.WhenAny(readAsyncTask, Task.Delay(TimeSpan.FromSeconds(1),
                     cancellationTokenSource.Token));
                 if (completedTask != readAsyncTask)
                 {
@@ -100,17 +105,17 @@ namespace AdbApp.Droid
             while (readAmountChars > 0);
         }
 
-        void IAdbService.StopAdbOutputAsync()
+        public void StopAdbOutputAsync()
         {
             try
             {
                 cancellationTokenSource?.Cancel();
             }
-            catch(ObjectDisposedException)
+            catch (ObjectDisposedException)
             {
 
             }
-            
+
         }
     }
 }

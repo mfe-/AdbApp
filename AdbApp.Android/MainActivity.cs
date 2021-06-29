@@ -1,31 +1,30 @@
-﻿using Android;
+﻿using System;
+
 using Android.App;
 using Android.Content.PM;
-using Android.OS;
+using Android.Runtime;
+using Android.Views;
 using Android.Widget;
-using AndroidX.Core.App;
-using Google.Android.Material.Snackbar;
+using Android.OS;
 using Prism;
 using Prism.Ioc;
-using System;
 using System.Collections.Generic;
+using Android;
 using System.Linq;
 
 namespace AdbApp.Droid
 {
-    [Activity(Theme = "@style/MainTheme",
-              ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
+    [Activity(Label = "AdbApp", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            TabLayoutResource = AdbApp.Droid.Resource.Layout.Tabbar;
-            ToolbarResource = AdbApp.Droid.Resource.Layout.Toolbar;
+            TabLayoutResource = Resource.Layout.Tabbar;
+            ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
-
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            LoadApplication(new App(new AndroidInitializer()));
+            LoadApplication(new AdbApp.App(new AndroidInitializer()));
 
             CheckAndRequestPermissions();
         }
@@ -57,9 +56,9 @@ namespace AdbApp.Droid
             CheckAndAddPermission(permissions, Manifest.Permission.WriteExternalStorage);
             //CheckAndAddPermission(permissions, Manifest.Permission.WriteSettings);
             CheckAndAddPermission(permissions, Manifest.Permission.WriteUserDictionary);
-            if(permissions.Any())
+            if (permissions.Any())
             {
-                ActivityCompat.RequestPermissions(this, permissions.ToArray(), 1000);
+                Android.Support.V4.App.ActivityCompat.RequestPermissions(this, permissions.ToArray(), 1000);
             }
 
         }
@@ -102,15 +101,14 @@ namespace AdbApp.Droid
             }
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-    }
 
-    public class AndroidInitializer : IPlatformInitializer
-    {
-        public void RegisterTypes(IContainerRegistry containerRegistry)
+        public class AndroidInitializer : IPlatformInitializer
         {
-            // Register any platform specific implementations
-            containerRegistry.Register<IAdbService,AdbService>();
+            public void RegisterTypes(IContainerRegistry containerRegistry)
+            {
+                // Register any platform specific implementations
+                containerRegistry.Register<IAdbService, AdbService>();
+            }
         }
     }
 }
-

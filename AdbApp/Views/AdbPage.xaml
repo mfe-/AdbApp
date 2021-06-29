@@ -12,8 +12,6 @@
                   HorizontalOptions="StartAndExpand"
                   local:ScrollToBottom.Enable="{Binding Path=ProcessingAdbOutput,Mode=TwoWay}"
                   FlowDirection="LeftToRight"
-                  HorizontalScrollBarVisibility="Always"
-                  VerticalScrollBarVisibility="Always"
             
                   HasUnevenRows="True">
             <ListView.ItemTemplate>

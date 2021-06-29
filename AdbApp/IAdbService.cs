@@ -7,7 +7,7 @@ namespace AdbApp
 {
     public interface IAdbService
     {
-        Task<IList<String>> GetAdbOutputAsync(string param, Action<string>? callback = null);
+        Task<IList<String>> GetAdbOutputAsync(string param, Action<string> callback = null);
 
         void StopAdbOutputAsync();
     }
