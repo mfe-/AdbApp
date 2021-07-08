@@ -7,7 +7,7 @@
              Padding="2">
 
     <StackLayout>
-        <ListView ItemsSource="{Binding Path=Output,Mode=TwoWay}"
+        <ListView ItemsSource="{Binding Path=FiltertedOutput,Mode=TwoWay}"
                   VerticalOptions="FillAndExpand"
                   HorizontalOptions="StartAndExpand"
                   local:ScrollToBottom.Enable="{Binding Path=ProcessingAdbOutput,Mode=TwoWay}"

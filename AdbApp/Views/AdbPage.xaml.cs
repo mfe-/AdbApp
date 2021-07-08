@@ -21,6 +21,10 @@ namespace AdbApp.Views
         void HandleSearchBarTextChanged(object sender, string searchBarText)
         {
             //Logic to handle updated search bar text
+            if(BindingContext is ViewModels.AdbPageViewModel adbPageViewModel)
+            {
+                adbPageViewModel.SearchCommand.Execute(searchBarText);
+            }
         }
     }
 }
