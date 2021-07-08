@@ -1,6 +1,6 @@
 using Android.App;
 using Android.Content;
-using AndroidX.AppCompat.App;
+using Android.Support.V7.App;
 
 namespace AdbApp.Droid
 {
