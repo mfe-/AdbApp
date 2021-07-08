@@ -7,7 +7,7 @@ using System.Text;
 
 namespace AdbApp.ViewModels
 {
-    public class ViewModelBase : BindableBase, IInitialize, INavigationAware, IDestructible
+    public class ViewModelBase : BindableBase, INavigationAware, IDestructible
     {
         protected INavigationService NavigationService { get; private set; }
 
@@ -24,22 +24,22 @@ namespace AdbApp.ViewModels
             _title = String.Empty;
         }
 
-        public virtual void Initialize(INavigationParameters parameters)
+        public void OnNavigatedFrom(INavigationParameters parameters)
+        {
+    
+        }
+
+        public void OnNavigatedTo(INavigationParameters parameters)
+        {
+  
+        }
+
+        public void OnNavigatingTo(INavigationParameters parameters)
         {
 
         }
 
-        public virtual void OnNavigatedFrom(INavigationParameters parameters)
-        {
-
-        }
-
-        public virtual void OnNavigatedTo(INavigationParameters parameters)
-        {
-
-        }
-
-        public virtual void Destroy()
+        public void Destroy()
         {
 
         }

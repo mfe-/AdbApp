@@ -4,8 +4,7 @@
                   x:Class="AdbApp.Views.MasterDetailPage">
     <MasterDetailPage.Master>
         <ContentPage Title="Menu"
-            Padding="0,40,0,0"
-            IconImageSource="{OnPlatform iOS='hamburger.png'}">
+            Padding="0,40,0,0">
             <StackLayout>
                 <Button Text="Main Page"
                 Command="{Binding NavigateCommand}"

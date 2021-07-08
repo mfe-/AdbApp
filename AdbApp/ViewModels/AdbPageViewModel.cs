@@ -1,7 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
-using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,6 +24,7 @@ namespace AdbApp.ViewModels
             this.GetAdbCommand = new DelegateCommand<string>(OnGetAdbCommandAsync);
             this.CancelCommand = new DelegateCommand(OnCancelCommand);
             this.ClearCommand = new DelegateCommand(OnClearCommand);
+            SearchCommand = new DelegateCommand<string>(OnSearch);
             this.adbService = adbService;
         }
 
@@ -32,9 +32,24 @@ namespace AdbApp.ViewModels
         public ObservableCollection<string> Output
         {
             get { return _Output; }
-            set { SetProperty(ref _Output, value, nameof(Output)); }
+            set
+            {
+                SetProperty(ref _Output, value, nameof(Output));
+                RaisePropertyChanged(nameof(FiltertedOutput));
+            }
         }
+        public IEnumerable<string> FiltertedOutput
+        {
+            get { return Output.Where(a => ShowEntry(a)).ToArray(); }
+        }
+        private bool ShowEntry(string entry)
+        {
+            if (String.IsNullOrEmpty(SearchText)) return true;
 
+
+            return entry.ToLower().Contains(SearchText.ToLower());
+
+        }
 
         private string _Params;
         public string Params
@@ -64,7 +79,7 @@ namespace AdbApp.ViewModels
                 Output.Add(param);
                 _ = await adbService.GetAdbOutputAsync(param, s => Output.Add(s));
             }
-            catch(ArgumentException)
+            catch (ArgumentException)
             {
                 //param is empty
             }
@@ -78,6 +93,13 @@ namespace AdbApp.ViewModels
                 ProcessingAdbOutput = false;
                 semaphoreSlim.Release();
             }
+        }
+        private string SearchText = "";
+        public ICommand SearchCommand { get; }
+        protected void OnSearch(string search)
+        {
+            SearchText = search;
+            RaisePropertyChanged(nameof(FiltertedOutput));
         }
 
         public ICommand ClearCommand { get; }
