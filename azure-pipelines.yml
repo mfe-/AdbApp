@@ -129,7 +129,7 @@ steps:
 
 - task: GooglePlayReleaseBundle@3
   inputs:
-    serviceConnection: 'googleplay'
+    serviceConnection: 'googleplayconsole'
     applicationId: 'get.the.solution.AdbApp'
     bundleFile: '**/*-Signed.$(packageFormat)'
     track: 'production'
