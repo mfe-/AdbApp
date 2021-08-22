@@ -4,10 +4,8 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Widget;
 using AndroidX.Core.App;
-using Google.Android.Material.Snackbar;
 using Prism;
 using Prism.Ioc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,7 +23,7 @@ namespace AdbApp.Droid
             base.OnCreate(savedInstanceState);
 
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            LoadApplication(new App(new AndroidInitializer()));
+            LoadApplication(new App(new AndroidInitializer(this)));
 
             CheckAndRequestPermissions();
         }
@@ -106,10 +104,17 @@ namespace AdbApp.Droid
 
     public class AndroidInitializer : IPlatformInitializer
     {
+        private readonly Activity activity;
+
+        public AndroidInitializer(Activity activity)
+        {
+            this.activity = activity;
+        }
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // Register any platform specific implementations
             containerRegistry.Register<IAdbService,AdbService>();
+            containerRegistry.RegisterInstance<IToastService>(new ToastService(activity.ApplicationContext));
         }
     }
 }

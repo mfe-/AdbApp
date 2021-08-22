@@ -75,6 +75,7 @@
     <Compile Include="MainActivity.cs" />
     <Compile Include="SplashActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToastService.cs" />
     <LinkDescription Include="LinkerSettings.xml" />
   </ItemGroup>
   <ItemGroup>

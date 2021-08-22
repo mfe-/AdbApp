@@ -3,6 +3,7 @@ using AdbApp.Views;
 using Prism;
 using Prism.Ioc;
 using Prism.Services;
+using System;
 using Xamarin.Essentials.Implementation;
 using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
