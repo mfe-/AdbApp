@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace AdbApp.ViewModels
@@ -11,21 +12,31 @@ namespace AdbApp.ViewModels
     public class AdbPageViewModel : ViewModelBase
     {
         private readonly IAdbService adbService;
+        private readonly IClipBoardService clipBoardService;
 
-        public AdbPageViewModel(INavigationService navigationService, IAdbService adbService)
+        public AdbPageViewModel(INavigationService navigationService, IAdbService adbService, IClipBoardService clipBoardService)
             : base(navigationService)
         {
             Title = "adb shell";
             this._Command = "logcat -D *:W";
+            this.adbService = adbService;
+            this.clipBoardService = clipBoardService;
             this._Output = new ObservableCollection<string>();
-            this._FilterOutput = new ObservableCollection<string>();
             this.GetAdbCommand = new DelegateCommand<string>(OnGetAdbCommandAsync);
             this.CancelCommand = new DelegateCommand(OnCancelCommand);
             this.ClearCommand = new DelegateCommand(OnClearCommand);
             this.FilterCommand = new DelegateCommand<string>(OnFilter);
-            this.adbService = adbService;
+            this.CopyCommand = new DelegateCommand<string>(OnCopyAsync);
         }
 
+        private void OnCopyAsync(string text)
+        {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            clipBoardService.SetTextAsync(text);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        }
+
+        public ICommand CopyCommand { get; }
         private ObservableCollection<string> _Output;
         public ObservableCollection<string> Output
         {
@@ -33,7 +44,6 @@ namespace AdbApp.ViewModels
             set { SetProperty(ref _Output, value, nameof(Output)); }
         }
 
-        private ObservableCollection<string> _FilterOutput;
         public ObservableCollection<string> FilterOutput
         {
             get
@@ -44,7 +54,7 @@ namespace AdbApp.ViewModels
                 }
                 else
                 {
-                    return new ObservableCollection<string>(Output.ToArray().Where(a => a.Contains(Filter) || String.IsNullOrEmpty(Filter)));
+                    return new ObservableCollection<string>(Output.Where(a => a.Contains(Filter) || String.IsNullOrEmpty(Filter)));
                 }
             }
         }

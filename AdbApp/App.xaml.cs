@@ -27,6 +27,7 @@ namespace AdbApp
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
+            containerRegistry.RegisterScoped<IClipBoardService, ClipBoardService>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<Views.MasterDetailPage, MasterDetailPageViewModel>();

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AdbApp.Views.AdbPage"
              xmlns:local="clr-namespace:AdbApp.Views"
+             xmlns:vm="clr-namespace:AdbApp.ViewModels"
              Title="{Binding Title}"
              Padding="2">
 
@@ -18,8 +19,13 @@
                   HasUnevenRows="True">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <ViewCell IsEnabled="False">
+                    <ViewCell IsEnabled="True" >
                         <StackLayout VerticalOptions="FillAndExpand">
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="2"
+                                                      CommandParameter="{Binding}"
+                                                      Command="{Binding Source={RelativeSource AncestorType={x:Type local:AdbPage}}, Path=BindingContext.CopyCommand}" />
+                            </StackLayout.GestureRecognizers>
                             <Label Text="{Binding}"
                                FlowDirection="LeftToRight"
                                HorizontalOptions="StartAndExpand" 
