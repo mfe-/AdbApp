@@ -33,6 +33,7 @@ namespace AdbApp
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<Views.MasterDetailPage, MasterDetailPageViewModel>();
             containerRegistry.RegisterForNavigation<AdbPage, AdbPageViewModel>();
+            containerRegistry.RegisterSingleton<AdbPageViewModel>();
             containerRegistry.RegisterForNavigation<PredefinedCommandPage, PredefinedCommandPageViewModel>();
             containerRegistry.RegisterForNavigation<AboutPage, AboutPageViewModel>();
         }
