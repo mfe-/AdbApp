@@ -4,7 +4,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
 
@@ -19,7 +18,7 @@ namespace AdbApp.ViewModels
             : base(navigationService)
         {
             Title = "adb shell";
-            this.Command = Preferences.Get(nameof(Command), "logcat - D *:W");
+            this._Command = Preferences.Get(nameof(Command), "logcat - D *:W");
             this.adbService = adbService;
             this.clipBoardService = clipBoardService;
             this._Output = new ObservableCollection<string>();
@@ -30,12 +29,10 @@ namespace AdbApp.ViewModels
             this.CopyCommand = new DelegateCommand<string>(OnCopyAsync);
         }
 
-        private void OnCopyAsync(string text)
-        {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            clipBoardService.SetTextAsync(text);
+        private void OnCopyAsync(string text)
+            => clipBoardService.SetTextAsync(text);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-        }
 
         public ICommand CopyCommand { get; }
         private ObservableCollection<string> _Output;
@@ -124,10 +121,8 @@ namespace AdbApp.ViewModels
 
         public ICommand ClearCommand { get; }
 
-        protected void OnClearCommand()
-        {
-            Output.Clear();
-        }
+        protected void OnClearCommand() 
+            => Output.Clear();
 
         public ICommand CancelCommand { get; }
 
@@ -135,7 +130,6 @@ namespace AdbApp.ViewModels
         {
             adbService.StopAdbOutputAsync();
             ProcessingAdbOutput = false;
-
         }
     }
 }
