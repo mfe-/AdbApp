@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 
 namespace AdbApp.ViewModels
 {
@@ -18,7 +19,7 @@ namespace AdbApp.ViewModels
             : base(navigationService)
         {
             Title = "adb shell";
-            this._Command = "logcat -D *:W";
+            this.Command = Preferences.Get(nameof(Command), "logcat - D *:W");
             this.adbService = adbService;
             this.clipBoardService = clipBoardService;
             this._Output = new ObservableCollection<string>();
@@ -63,7 +64,11 @@ namespace AdbApp.ViewModels
         public string Command
         {
             get { return _Command; }
-            set { SetProperty(ref _Command, value, nameof(Command)); }
+            set
+            {
+                SetProperty(ref _Command, value, nameof(Command));
+                Preferences.Set(nameof(Command), _Command);
+            }
         }
 
         private string _Filter = String.Empty;
