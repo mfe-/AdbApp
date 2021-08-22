@@ -13,6 +13,7 @@ using Xamarin.Forms.Platform.Android;
 [assembly: ExportRenderer(typeof(AdbApp.Views.AdbPage), typeof(SearchPageRenderer))]
 namespace AdbApp.Droid
 {
+#nullable enable
     public class SearchPageRenderer : PageRenderer
     {
         public SearchPageRenderer(Context context) : base(context)

@@ -22,7 +22,7 @@ namespace AdbApp.ViewModels
             {
                 var result = await NavigationService.NavigateAsync($"NavigationPage/{navigateToPage}");
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }

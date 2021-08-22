@@ -1,12 +1,8 @@
 ﻿using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Navigation;
-using Prism.Services.Dialogs;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Windows.Input;
 
@@ -20,11 +16,13 @@ namespace AdbApp.ViewModels
             : base(navigationService)
         {
             Title = "adb shell";
-            this._Params = "logcat -D *:W";
+            this._Command = "logcat -D *:W";
             this._Output = new ObservableCollection<string>();
+            this._FilterOutput = new ObservableCollection<string>();
             this.GetAdbCommand = new DelegateCommand<string>(OnGetAdbCommandAsync);
             this.CancelCommand = new DelegateCommand(OnCancelCommand);
             this.ClearCommand = new DelegateCommand(OnClearCommand);
+            this.FilterCommand = new DelegateCommand<string>(OnFilter);
             this.adbService = adbService;
         }
 
@@ -35,12 +33,41 @@ namespace AdbApp.ViewModels
             set { SetProperty(ref _Output, value, nameof(Output)); }
         }
 
-
-        private string _Params;
-        public string Params
+        private ObservableCollection<string> _FilterOutput;
+        public ObservableCollection<string> FilterOutput
         {
-            get { return _Params; }
-            set { SetProperty(ref _Params, value, nameof(Params)); }
+            get
+            {
+                if (String.IsNullOrEmpty(Filter))
+                {
+                    return _Output;
+                }
+                else
+                {
+                    return new ObservableCollection<string>(Output.ToArray().Where(a => a.Contains(Filter) || String.IsNullOrEmpty(Filter)));
+                }
+            }
+        }
+
+        private string _Command;
+        public string Command
+        {
+            get { return _Command; }
+            set { SetProperty(ref _Command, value, nameof(Command)); }
+        }
+
+        private string _Filter = String.Empty;
+        public string Filter
+        {
+            get { return _Filter; }
+            set { SetProperty(ref _Filter, value, nameof(Filter)); }
+        }
+
+        public ICommand FilterCommand { get; }
+        private void OnFilter(string filter)
+        {
+            Filter = filter;
+            RaisePropertyChanged(nameof(FilterOutput));
         }
 
         private bool _ProcessingAdbOutput;
@@ -64,7 +91,7 @@ namespace AdbApp.ViewModels
                 Output.Add(param);
                 _ = await adbService.GetAdbOutputAsync(param, s => Output.Add(s));
             }
-            catch(ArgumentException)
+            catch (ArgumentException)
             {
                 //param is empty
             }

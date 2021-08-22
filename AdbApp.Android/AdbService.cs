@@ -1,20 +1,13 @@
-﻿using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Java.IO;
+﻿using Java.IO;
 using Java.Lang;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
 namespace AdbApp.Droid
 {
     public class AdbService : IAdbService
@@ -42,20 +35,23 @@ namespace AdbApp.Droid
                     processBuilder.Command(commandParameter);
                     using (var process = processBuilder.Start())
                     {
-                        using (BufferedReader bufferedInputReader = new BufferedReader(
-                                 new InputStreamReader(process.InputStream)))
+                        if (process != null)
                         {
-                            await ReadStreamAsync(bufferedInputReader, logs, callback, cancellationTokenSource.Token);
+                            using (BufferedReader bufferedInputReader = new BufferedReader(
+                                     new InputStreamReader(process.InputStream)))
+                            {
+                                await ReadStreamAsync(bufferedInputReader, logs, cancellationTokenSource.Token, callback);
+                            }
+                            process.Destroy();
+                            process.Dispose();
                         }
-                        process.Destroy();
-                        process.Dispose();
                     }
                 }
                 cancellationTokenSource = null;
                 return logs;
             }
         }
-        private async Task ReadStreamAsync(Reader bufferedReader, IList<string> logs, Action<string>? callback = null, CancellationToken? cancellationToken = null)
+        private async Task ReadStreamAsync(Reader bufferedReader, IList<string> logs, CancellationToken cancellationToken, Action<string>? callback = null)
         {
             string s;
             char[] buffer = new char[bufferSize];
@@ -94,7 +90,7 @@ namespace AdbApp.Droid
                 }
                 buffer = new char[bufferSize];
                 //check if a cancellation was requested
-                if (cancellationToken != null && cancellationToken.Value.IsCancellationRequested)
+                if (cancellationToken != null && cancellationToken.IsCancellationRequested)
                     break;
             }
             while (readAmountChars > 0);
@@ -106,11 +102,11 @@ namespace AdbApp.Droid
             {
                 cancellationTokenSource?.Cancel();
             }
-            catch(ObjectDisposedException)
+            catch (ObjectDisposedException)
             {
 
             }
-            
+
         }
     }
 }

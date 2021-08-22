@@ -49,7 +49,7 @@ namespace AdbApp.Droid
             CheckAndAddPermission(permissions, Manifest.Permission.ReadLogs);
             //CheckAndAddPermission(permissions, Manifest.Permission.Reboot);
             CheckAndAddPermission(permissions, Manifest.Permission.ReceiveBootCompleted);
-            CheckAndAddPermission(permissions, Manifest.Permission.RestartPackages);
+            //CheckAndAddPermission(permissions, Manifest.Permission.RestartPackages);
             //required for dumpsys - permission is restricted for firmware manufacturers 
             CheckAndAddPermission(permissions, Manifest.Permission.Dump);
             //CheckAndAddPermission(permissions, Manifest.Permission.SetDebugApp);
