@@ -27,6 +27,7 @@ steps:
     sshKeySecureFile: 'algodocs_rsa'
 
 - script: |
+    echo System.ArtifactsDirectory=$(System.ArtifactsDirectory)
     git clone https://github.com/mfe-/AdbApp.git --progress
   displayName: 'git clone'
 
@@ -36,7 +37,7 @@ steps:
     script: |
       # Write your PowerShell commands here.
       cd AdbApp
-      .\generate_changelog.ps1 -branch "${{ parameters.BranchName }}" -since "${{parameters.CommitsSince}}" -logp "$(System.ArtifactsDirectory)"
+      .\generate_changelog.ps1 -workitembaseuri "https://github.com/mfe-/AdbApp/issues/{0}" -branch "${{ parameters.BranchName }}" -since "${{parameters.CommitsSince}}" -logp "$(System.ArtifactsDirectory)"
       Write-Host "Hello World"
 
 - task: PublishBuildArtifacts@1

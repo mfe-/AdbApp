@@ -4,16 +4,17 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
 
 trigger:
- branches:
-   include:
-   - main
-   - releases/*
- paths:
-   include:
-   - docs
-   exclude:
-   - azure-pipelines-changelog.yml
-   - azure-pipelines.yml
+ - none 
+#  branches:
+#    include:
+#    - main
+#    - releases/*
+#  paths:
+#    include:
+#    - docs
+#    exclude:
+#    - azure-pipelines-changelog.yml
+#    - azure-pipelines.yml
 
 pool:
   vmImage: 'windows-latest'

@@ -1,7 +1,7 @@
 param (
   [string]$cdgitfolder,
   [Parameter(Mandatory = $true)][string]$branch,
-  [string]$workitembaseuri = 'https://github.com/mfe-/AdbApp/issues/{0}',
+  [string]$workitembaseuri = '{0}',
   [string]$since,
   [string]$logp
 )
