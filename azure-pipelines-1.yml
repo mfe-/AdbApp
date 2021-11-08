@@ -9,6 +9,15 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+parameters:
+- name: CommitsSince
+  type: string
+  displayName: 'Generate Changelog since (for example 2021-10-01)?'
+  default: '2021-10-01'
+- name: BranchName
+  type: string
+  default: 'main'
+
 steps:
 - checkout: none
 
@@ -26,5 +35,6 @@ steps:
     targetType: 'inline'
     script: |
       # Write your PowerShell commands here.
-      
+      cd AdbApp
+      .\generate_changelog.ps1 -branch "${{ parameters.BranchName }}" -date "${{parameters.CommitsSince}}"
       Write-Host "Hello World"
