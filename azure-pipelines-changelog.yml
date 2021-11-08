@@ -36,5 +36,5 @@ steps:
     script: |
       # Write your PowerShell commands here.
       cd AdbApp
-      .\generate_changelog.ps1 -branch "${{ parameters.BranchName }}" -since "${{parameters.CommitsSince}}"
+      .\generate_changelog.ps1 -branch "${{ parameters.BranchName }}" -since "${{parameters.CommitsSince}}" -logp "$(System.ArtifactsDirectory)"
       Write-Host "Hello World"
