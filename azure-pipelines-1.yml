@@ -4,7 +4,7 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+- none
 
 pool:
   vmImage: ubuntu-latest
@@ -17,3 +17,12 @@ steps:
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
+
+- task: InstallSSHKey@0
+  inputs:
+    knownHostsEntry: '140.82.121.3'
+    sshKeySecureFile: 'algodocs_rsa'
+
+- script: |
+    git clone https://github.com/mfe-/AdbApp.git --progress
+  displayName: 'git clone'
