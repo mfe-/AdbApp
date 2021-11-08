@@ -16,7 +16,7 @@ parameters:
   default: '2021-10-01'
 - name: BranchName
   type: string
-  default: 'main'
+  default: 'master'
 
 steps:
 - checkout: none
