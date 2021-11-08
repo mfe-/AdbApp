@@ -10,13 +10,7 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- checkout: none
 
 - task: InstallSSHKey@0
   inputs:
@@ -26,3 +20,11 @@ steps:
 - script: |
     git clone https://github.com/mfe-/AdbApp.git --progress
   displayName: 'git clone'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      
+      Write-Host "Hello World"
