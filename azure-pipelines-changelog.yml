@@ -38,3 +38,9 @@ steps:
       cd AdbApp
       .\generate_changelog.ps1 -branch "${{ parameters.BranchName }}" -since "${{parameters.CommitsSince}}" -logp "$(System.ArtifactsDirectory)"
       Write-Host "Hello World"
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'changeset'
+    publishLocation: 'Container'
