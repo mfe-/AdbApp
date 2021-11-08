@@ -4,7 +4,8 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
 
 trigger:
-- master
+- none
+#- master
 
 pool:
   vmImage: 'windows-latest'
