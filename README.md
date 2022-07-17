@@ -12,3 +12,5 @@ If compiling from source, you propably want to set a lower android api level in 
 Targeting newer android api versions are very restrictive regarding reading device information such as serialnumbers of the hardware. Newer api version forbid reading such information complete. You need than to target a lower api version.
 
 For more information see for example https://developer.android.com/reference/android/os/Build#getSerial()
+
+See also https://get-the-solution.net/blog/Working%20with%20adb%20aka%20Android%20Debug%20Bridge
