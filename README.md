@@ -13,4 +13,4 @@ Targeting newer android api versions are very restrictive regarding reading devi
 
 For more information see for example https://developer.android.com/reference/android/os/Build#getSerial()
 
-See also https://get-the-solution.net/blog/Working%20with%20adb%20aka%20Android%20Debug%20Bridge
+See also [Working with adb aka Android Debug Bridge](https://get-the-solution.net/blog/Working%20with%20adb%20aka%20Android%20Debug%20Bridge)
