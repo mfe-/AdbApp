@@ -1,31 +1,30 @@
-﻿
-using AdbApp.ViewModels;
-using System;
+using AdbApp.Maui.ViewModels;
+using System.Collections.Specialized;
 
-namespace AdbApp.Views
+namespace AdbApp.Maui.Views;
+
+public partial class AdbPage : ContentPage
 {
-    public partial class AdbPage : ISearchPage
+    private readonly AdbPageViewModel viewModel;
+
+    public AdbPage(AdbPageViewModel viewModel)
     {
-        public AdbPage()
+        InitializeComponent();
+        BindingContext = this.viewModel = viewModel;
+        this.viewModel.Output.CollectionChanged += HandleOutputCollectionChanged;
+    }
+
+    private void HandleOutputCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        var lastItem = viewModel.FilterOutput.LastOrDefault();
+        if (lastItem is null)
         {
-            InitializeComponent();
-            SearchBarTextChanged += HandleSearchBarTextChanged;
+            return;
         }
 
-        public event EventHandler<string> SearchBarTextChanged;
-
-        public void OnSearchBarTextChanged(string text)
+        Dispatcher.Dispatch(() =>
         {
-            SearchBarTextChanged?.Invoke(this, text);
-        }
-
-        void HandleSearchBarTextChanged(object sender, string searchBarText)
-        {
-            //Logic to handle updated search bar text
-            if (BindingContext is AdbPageViewModel adbPageViewModel)
-            {
-                adbPageViewModel.FilterCommand.Execute(searchBarText);
-            }
-        }
+            OutputCollectionView.ScrollTo(lastItem, position: ScrollToPosition.End, animate: false);
+        });
     }
 }

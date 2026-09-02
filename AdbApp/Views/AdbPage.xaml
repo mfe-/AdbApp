@@ -1,52 +1,53 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AdbApp.Views.AdbPage"
-             xmlns:local="clr-namespace:AdbApp.Views"
-             xmlns:vm="clr-namespace:AdbApp.ViewModels"
+             x:Class="AdbApp.Maui.Views.AdbPage"
              Title="{Binding Title}"
-             Padding="2">
+             Padding="8">
 
-    <StackLayout>
-        <ListView ItemsSource="{Binding Path=FilterOutput,Mode=TwoWay}"
-                  VerticalOptions="FillAndExpand"
-                  HorizontalOptions="StartAndExpand"
-                  local:ScrollToBottom.Enable="{Binding Path=ProcessingAdbOutput,Mode=TwoWay}"
-                  FlowDirection="LeftToRight"
-                  HorizontalScrollBarVisibility="Always"
-                  VerticalScrollBarVisibility="Always"
-            
-                  HasUnevenRows="True">
-            <ListView.ItemTemplate>
+    <Grid RowDefinitions="Auto,* ,Auto,Auto" RowSpacing="8">
+        <SearchBar Grid.Row="0"
+                   Placeholder="Filter output"
+                   Text="{Binding Filter, Mode=TwoWay}" />
+
+        <CollectionView x:Name="OutputCollectionView"
+                        Grid.Row="1"
+                        ItemsSource="{Binding FilterOutput}">
+            <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <ViewCell IsEnabled="True" >
-                        <StackLayout VerticalOptions="FillAndExpand">
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer NumberOfTapsRequired="2"
-                                                      CommandParameter="{Binding}"
-                                                      Command="{Binding Source={RelativeSource AncestorType={x:Type local:AdbPage}}, Path=BindingContext.CopyCommand}" />
-                            </StackLayout.GestureRecognizers>
-                            <Label Text="{Binding}"
-                               FlowDirection="LeftToRight"
-                               HorizontalOptions="StartAndExpand" 
+                    <Grid Padding="2">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="2"
+                                                  Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.CopyCommand}"
+                                                  CommandParameter="{Binding .}" />
+                        </Grid.GestureRecognizers>
+                        <Label Text="{Binding .}"
                                LineBreakMode="CharacterWrap" />
-                        </StackLayout>
-                    </ViewCell>
+                    </Grid>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
-            <Button Text="fire command" 
-                    Command="{Binding Path=GetAdbCommand}" 
-                    CommandParameter="{Binding Path=Command}" />
-            <Entry Text="{Binding Path=Command,Mode=TwoWay}" 
-                   HorizontalOptions="FillAndExpand" />
-        </StackLayout>
-        <StackLayout Orientation="Horizontal">
-            <Button Text="Cancel" Command="{Binding Path=CancelCommand}" />
-            <Button Text="Clear" Command="{Binding Path=ClearCommand}" />
-            <Label VerticalOptions="Center" Text="{Binding Path=Output.Count,Mode=OneWay,StringFormat='Entries {0}'}" />
-        </StackLayout>
-    </StackLayout>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
+        <Grid Grid.Row="2" ColumnDefinitions="Auto,*" ColumnSpacing="8">
+            <Button Grid.Column="0"
+                    Text="fire command"
+                    Command="{Binding GetAdbCommand}"
+                    CommandParameter="{Binding Command}" />
+            <Entry Grid.Column="1"
+                   Text="{Binding Command, Mode=TwoWay}" />
+        </Grid>
+
+        <Grid Grid.Row="3" ColumnDefinitions="Auto,Auto,*" ColumnSpacing="8">
+            <Button Grid.Column="0"
+                    Text="Cancel"
+                    Command="{Binding CancelCommand}" />
+            <Button Grid.Column="1"
+                    Text="Clear"
+                    Command="{Binding ClearCommand}" />
+            <Label Grid.Column="2"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="End"
+                   Text="{Binding OutputCount, StringFormat='Entries {0}'}" />
+        </Grid>
+    </Grid>
 </ContentPage>

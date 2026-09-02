@@ -1,23 +1,15 @@
-using System;
 using Android.App;
 using Android.Runtime;
 
-namespace AdbApp.Droid
-{
-    [Application(
-        Theme = "@style/MainTheme"
-        )]
-    public class MainApplication : Application
-    {
-        public MainApplication(IntPtr javaReference, JniHandleOwnership transfer)
-            : base(javaReference, transfer)
-        {
-        }
+namespace AdbApp.Maui.Android;
 
-        public override void OnCreate()
-        {
-            base.OnCreate();
-            Xamarin.Essentials.Platform.Init(this);
-        }
+[Application]
+public class MainApplication : MauiApplication
+{
+    public MainApplication(IntPtr handle, JniHandleOwnership ownership)
+        : base(handle, ownership)
+    {
     }
+
+    protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 }

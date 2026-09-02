@@ -1,9 +1,6 @@
-﻿using System.Threading.Tasks;
+namespace AdbApp.Maui;
 
-namespace AdbApp
+public interface IClipBoardService
 {
-    public interface IClipBoardService
-    {
-        Task SetTextAsync(string text);
-    }
+    Task SetTextAsync(string text);
 }
