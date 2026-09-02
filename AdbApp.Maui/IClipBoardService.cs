@@ -1,4 +1,4 @@
-namespace AdbApp.Maui.Services;
+namespace AdbApp.Maui;
 
 public interface IClipBoardService
 {

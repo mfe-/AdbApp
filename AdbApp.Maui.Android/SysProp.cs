@@ -1,6 +1,6 @@
 using Java.Lang;
 
-namespace AdbApp.Maui.Services;
+namespace AdbApp.Maui.Android;
 
 public static class SysProp
 {

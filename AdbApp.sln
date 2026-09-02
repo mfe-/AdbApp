@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdbApp", "AdbApp\AdbApp.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdbApp.Android", "AdbApp.Android\AdbApp.Android.csproj", "{954FEDAB-C1D2-4199-A29C-461C456F6219}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdbApp.Maui", "AdbApp.Maui\AdbApp.Maui.csproj", "{D5D2F8E0-5D73-4B40-9A2D-1D53F2BB6B21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdbApp.Maui", "AdbApp.Maui\AdbApp.csproj", "{D5D2F8E0-5D73-4B40-9A2D-1D53F2BB6B21}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6768249E-8D8B-46B4-8426-FE79AB7683CD}"
 	ProjectSection(SolutionItems) = preProject

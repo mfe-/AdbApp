@@ -17,6 +17,10 @@
     <AndroidTargetSdkVersion>36</AndroidTargetSdkVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
+    <AndroidManifest>..\AdbApp.Maui.Android\Properties\AndroidManifest.xml</AndroidManifest>
+  </PropertyGroup>
+
   <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
     <JavaSdkDirectory>$(HOME)/.local/jdk-21</JavaSdkDirectory>
     <AndroidSdkDirectory>$(HOME)/.android-sdk</AndroidSdkDirectory>
@@ -24,6 +28,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.20" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
+    <Compile Include="..\AdbApp.Maui.Android\*.cs" Link="AdbApp.Maui.Android\%(Filename)%(Extension)" />
+    <AndroidResource Include="..\AdbApp.Maui.Android\Resources\**\*.*" Link="Resources\%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

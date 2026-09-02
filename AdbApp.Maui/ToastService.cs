@@ -1,7 +1,7 @@
 using Android.Widget;
 using Microsoft.Maui.ApplicationModel;
 
-namespace AdbApp.Maui.Services;
+namespace AdbApp.Maui;
 
 public class ToastService : IToastService
 {

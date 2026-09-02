@@ -17,9 +17,6 @@ namespace AdbApp.Droid
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            TabLayoutResource = AdbApp.Droid.Resource.Layout.Tabbar;
-            ToolbarResource = AdbApp.Droid.Resource.Layout.Toolbar;
-
             base.OnCreate(savedInstanceState);
 
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);

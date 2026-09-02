@@ -2,7 +2,7 @@ using Java.IO;
 using Java.Lang;
 using Reader = Java.IO.Reader;
 
-namespace AdbApp.Maui.Services;
+namespace AdbApp.Maui;
 
 public class AdbService : IAdbService
 {

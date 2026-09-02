@@ -22,7 +22,7 @@ namespace AdbApp
 
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("/MasterDetailPage/NavigationPage/AdbPage");
+            await NavigationService.NavigateAsync("/NavigationPage/AdbPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -31,7 +31,6 @@ namespace AdbApp
             containerRegistry.RegisterScoped<IClipBoardService, ClipBoardService>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<Views.MasterDetailPage, MasterDetailPageViewModel>();
             containerRegistry.RegisterForNavigation<AdbPage, AdbPageViewModel>();
             containerRegistry.RegisterSingleton<AdbPageViewModel>();
             containerRegistry.RegisterForNavigation<PredefinedCommandPage, PredefinedCommandPageViewModel>();
