@@ -1,47 +1,34 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using Prism.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
-namespace AdbApp.ViewModels
+namespace AdbApp.Maui.ViewModels;
+
+public abstract class ViewModelBase : INotifyPropertyChanged
 {
-    public class ViewModelBase : BindableBase, IInitialize, INavigationAware, IDestructible
+    private string title = string.Empty;
+
+    public string Title
     {
-        protected INavigationService NavigationService { get; private set; }
+        get => title;
+        set => SetProperty(ref title, value);
+    }
 
-        private string _title;
-        public string Title
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected bool SetProperty<T>(ref T backingStore, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(backingStore, value))
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            return false;
         }
 
-        public ViewModelBase(INavigationService navigationService)
-        {
-            NavigationService = navigationService;
-            _title = String.Empty;
-        }
+        backingStore = value;
+        OnPropertyChanged(propertyName);
+        return true;
+    }
 
-        public virtual void Initialize(INavigationParameters parameters)
-        {
-
-        }
-
-        public virtual void OnNavigatedFrom(INavigationParameters parameters)
-        {
-
-        }
-
-        public virtual void OnNavigatedTo(INavigationParameters parameters)
-        {
-
-        }
-
-        public virtual void Destroy()
-        {
-
-        }
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

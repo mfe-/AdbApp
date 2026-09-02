@@ -1,40 +1,17 @@
-using AdbApp.ViewModels;
-using AdbApp.Views;
-using Prism;
-using Prism.Ioc;
-using Prism.Services;
-using System;
-using Xamarin.Essentials.Implementation;
-using Xamarin.Essentials.Interfaces;
-using Xamarin.Forms;
+namespace AdbApp.Maui;
 
-namespace AdbApp
+public partial class App : Application
 {
-    public partial class App
+    private readonly AppShell shell;
+
+    public App(AppShell shell)
     {
-        public App(IPlatformInitializer initializer)
-            : base(initializer)
-        {
-        }
+        InitializeComponent();
+        this.shell = shell;
+    }
 
-        protected override async void OnInitialized()
-        {
-
-            InitializeComponent();
-
-            await NavigationService.NavigateAsync("/NavigationPage/AdbPage");
-        }
-
-        protected override void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-            containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
-            containerRegistry.RegisterScoped<IClipBoardService, ClipBoardService>();
-
-            containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<AdbPage, AdbPageViewModel>();
-            containerRegistry.RegisterSingleton<AdbPageViewModel>();
-            containerRegistry.RegisterForNavigation<PredefinedCommandPage, PredefinedCommandPageViewModel>();
-            containerRegistry.RegisterForNavigation<AboutPage, AboutPageViewModel>();
-        }
+    protected override Window CreateWindow(IActivationState? activationState)
+    {
+        return new Window(shell);
     }
 }

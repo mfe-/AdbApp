@@ -1,9 +1,6 @@
-﻿using System.Threading.Tasks;
+namespace AdbApp.Maui;
 
-namespace AdbApp
+public interface IToastService
 {
-    public interface IToastService
-    {
-        Task ShowToastAsync(string message);
-    }
+    Task ShowToastAsync(string message);
 }
