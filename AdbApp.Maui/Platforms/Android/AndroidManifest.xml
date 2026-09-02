@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="get.the.solution.AdbApp">
+  <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="36" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <application android:icon="@mipmap/icon" android:roundIcon="@mipmap/icon_round"></application>
+</manifest>
