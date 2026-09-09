@@ -1,7 +1,5 @@
-# Xamarin.Android
-# Build a Xamarin.Android project.
-# Add steps that test, sign, and distribute an app, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
+# .NET MAUI Android
+# Build, sign, and publish a .NET MAUI Android package.
 
 trigger:
  - none 
@@ -29,6 +27,12 @@ variables:
     value: '$(Build.BuildID)'
   - name: packageFormat
     value: aab
+  - name: dotnetVersion
+    value: '10.0.x'
+  - name: targetFramework
+    value: 'net10.0-android'
+  - name: appProject
+    value: 'AdbApp/AdbApp.csproj'
 
 steps:
 - checkout: self
@@ -54,55 +58,24 @@ steps:
       Write-Host $version
       Write-Host "##vso[task.setvariable variable=version]$version"
 
-- task: NuGetToolInstaller@1
-
-- task: NuGetCommand@2
+- task: UseDotNet@2
+  displayName: 'Install .NET SDK $(dotnetVersion)'
   inputs:
-    restoreSolution: '**/*.sln'
+    packageType: 'sdk'
+    version: '$(dotnetVersion)'
 
 - task: PowerShell@2
-  displayName: 'pump AndroidManifest,AssemblyInfo version to $version'
+  displayName: 'Install MAUI Android workload'
   inputs:
-    workingDirectory: '$(Build.SourcesDirectory)'
     targetType: 'inline'
     script: |
-      Write-Host "Set version: $(version)"
-      $version = "$(version)"
-      $outputversion = "$(version)"
-      $build="$(BuildID)"
-      $packageManifest = "AndroidManifest.xml"
+      dotnet workload install maui-android --ignore-failed-sources
 
-      # Apply the version to the assembly property files
-      $VersionRegex = "\d+\.\d+\.\d+\.\d+"
-      $assemblyInfoFiles = gci . -recurse -include "*Properties*","My Project" | 
-          ?{ $_.PSIsContainer } | 
-          foreach { gci -Path $_.FullName -Recurse -include AssemblyInfo.*, $packageManifest }
-      
-      if($assemblyInfoFiles)
-      {
-          Write-Host "Will apply $AssemblyVersion to $($assemblyInfoFiles.count) Assembly Info Files."
-      
-          foreach ($file in $assemblyInfoFiles) {
-              $filecontent = Get-Content($file)
-              if($file.Name -eq $packageManifest)
-              {
-                  $xml = [xml](Get-Content($file))
-                  $xml.manifest.versionName = $version
-                  $xml.manifest.versionCode = $build
-                  $xml.Save($file)
-              }
-              else
-              {
-                  attrib $file -r
-                  $filecontent -replace $VersionRegex, $version  | Out-File $file utf8
-              }
-              Write-Host "$file.FullName - $version version applied"
-          }
-      }
-      else
-      {
-          Write-Warning "No Assembly Info Files found."
-      }
+- task: DotNetCoreCLI@2
+  displayName: 'Restore'
+  inputs:
+    command: 'restore'
+    projects: '$(appProject)'
 
 - task: DownloadSecureFile@1
   name: signingCert
@@ -110,24 +83,29 @@ steps:
   inputs:
    secureFile: '$(signingCert.secureFilePath)'
 
-- task: XamarinAndroid@1
+- task: DotNetCoreCLI@2
+  displayName: 'Publish signed Android $(packageFormat)'
   inputs:
-    projectFile: '**/*droid*.csproj'
-    outputDirectory: '$(outputDirectory)'
-    configuration: '$(buildConfiguration)'
-    msbuildArguments: '
-    -t:SignAndroidPackage 
-    -p:AndroidKeyStore=True 
-    -p:AndroidSigningKeyStore=$(signingCert.secureFilePath) 
-    -p:AndroidSigningStorePass=$(keystore.password) 
-    -p:AndroidSigningKeyAlias=$(key.alias) 
-    -p:AndroidSigningKeyPass=$(key.password)
-    -p:AndroidPackageFormat=$(packageFormat)'
+    command: 'publish'
+    publishWebProjects: false
+    projects: '$(appProject)'
+    arguments: >
+      -c $(buildConfiguration)
+      -f $(targetFramework)
+      /p:AndroidKeyStore=true
+      /p:AndroidSigningKeyStore="$(signingCert.secureFilePath)"
+      /p:AndroidSigningStorePass="$(keystore.password)"
+      /p:AndroidSigningKeyAlias="$(key.alias)"
+      /p:AndroidSigningKeyPass="$(key.password)"
+      /p:AndroidPackageFormats=$(packageFormat)
+      /p:ApplicationDisplayVersion=$(version)
+      /p:ApplicationVersion=$(BuildID)
+      /p:ContinuousIntegrationBuild=true
 
 - task: 'CopyFiles@2'
   displayName: 'Copy deliverables'
   inputs:
-    SourceFolder: '$(outputDirectory)'
+    SourceFolder: '$(Build.SourcesDirectory)/AdbApp/bin/$(buildConfiguration)/$(targetFramework)/publish'
     Contents: '*.$(packageFormat)'
     TargetFolder: 'drop'
 
