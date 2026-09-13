@@ -105,8 +105,8 @@ steps:
 - task: 'CopyFiles@2'
   displayName: 'Copy deliverables'
   inputs:
-    SourceFolder: '$(Build.SourcesDirectory)/AdbApp/bin/$(buildConfiguration)/$(targetFramework)/publish'
-    Contents: '*.$(packageFormat)'
+    SourceFolder: '$(Build.SourcesDirectory)/AdbApp/bin/$(buildConfiguration)/$(targetFramework)'
+    Contents: '**/*.$(packageFormat)'
     TargetFolder: 'drop'
 
 - task: PublishBuildArtifacts@1
