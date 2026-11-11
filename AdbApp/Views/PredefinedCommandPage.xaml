@@ -1,12 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AdbApp.Views.PredefinedCommandPage">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="app logo by John Gardner"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
-    </ContentPage.Content>
+             x:Class="AdbApp.Maui.Views.PredefinedCommandPage"
+             Padding="12">
+    <VerticalStackLayout>
+        <Label Text="App logo by John Gardner"
+               VerticalOptions="Center"
+               HorizontalOptions="Center" />
+    </VerticalStackLayout>
 </ContentPage>

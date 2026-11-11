@@ -1,15 +1,19 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Input;
-using Xamarin.Essentials;
 
-namespace AdbApp.ViewModels
+namespace AdbApp.Maui.ViewModels;
+
+public class AboutPageViewModel : ViewModelBase
 {
-    public class AboutPageViewModel : BindableBase
+    public AboutPageViewModel()
     {
-        public ICommand TapCommand => new DelegateCommand<string>(async (url) => await Launcher.OpenAsync(url));
+        TapCommand = new Command<string>(async url =>
+        {
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                await Launcher.Default.OpenAsync(url);
+            }
+        });
     }
+
+    public ICommand TapCommand { get; }
 }

@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AdbApp.Maui.ViewModels;
 
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+namespace AdbApp.Maui.Views;
 
-namespace AdbApp.Views
+public partial class AboutPage : ContentPage
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class AboutPage : ContentPage
+    public AboutPage(AboutPageViewModel viewModel)
     {
-        public AboutPage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+        BindingContext = viewModel;
     }
 }

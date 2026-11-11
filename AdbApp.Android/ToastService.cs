@@ -1,30 +1,14 @@
-﻿using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Maui.ApplicationModel;
 
-namespace AdbApp.Droid
+namespace AdbApp.Maui.Android;
+
+public class ToastService : IToastService
 {
-    public class ToastService : IToastService
+    public Task ShowToastAsync(string message)
     {
-        private readonly Context context;
-
-        public ToastService(Context context)
-        {
-            this.context = context;
-        }
-        public Task ShowToastAsync(string message)
-        {
-            var toast = Toast.MakeText(context, message, ToastLength.Short);
-            toast.Show();
-            return Task.CompletedTask;
-        }
+        var context = Platform.CurrentActivity ?? Platform.AppContext;
+        Toast.MakeText(context, message, ToastLength.Short)?.Show();
+        return Task.CompletedTask;
     }
 }

@@ -1,135 +1,158 @@
-﻿using Prism.Commands;
-using Prism.Navigation;
-using System;
+using AdbApp.Maui;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading;
+using System.Collections.Specialized;
 using System.Windows.Input;
-using Xamarin.Essentials;
 
-namespace AdbApp.ViewModels
+namespace AdbApp.Maui.ViewModels;
+
+public class AdbPageViewModel : ViewModelBase
 {
-    public class AdbPageViewModel : ViewModelBase
+    private readonly IAdbService adbService;
+    private readonly IClipBoardService clipBoardService;
+    private readonly SemaphoreSlim semaphoreSlim = new(1, 1);
+
+    private string command;
+    private string filter = string.Empty;
+    private bool processingAdbOutput;
+    private int outputCount;
+
+    public AdbPageViewModel(IAdbService adbService, IClipBoardService clipBoardService)
     {
-        private readonly IAdbService adbService;
-        private readonly IClipBoardService clipBoardService;
+        Title = "adb shell";
+        command = Preferences.Default.Get(nameof(Command), "logcat - D *:W");
 
-        public AdbPageViewModel(INavigationService navigationService, IAdbService adbService, IClipBoardService clipBoardService)
-            : base(navigationService)
+        this.adbService = adbService;
+        this.clipBoardService = clipBoardService;
+
+        Output = new ObservableCollection<string>();
+        Output.CollectionChanged += OnOutputCollectionChanged;
+
+        GetAdbCommand = new Command<string>(async p => await OnGetAdbCommandAsync(p));
+        CancelCommand = new Command(OnCancelCommand);
+        ClearCommand = new Command(OnClearCommand);
+        CopyCommand = new Command<string>(async text => await OnCopyAsync(text));
+    }
+
+    public ObservableCollection<string> Output { get; }
+
+    public IReadOnlyList<string> FilterOutput
+    {
+        get
         {
-            Title = "adb shell";
-            this._Command = Preferences.Get(nameof(Command), "logcat - D *:W");
-            this.adbService = adbService;
-            this.clipBoardService = clipBoardService;
-            this._Output = new ObservableCollection<string>();
-            this.GetAdbCommand = new DelegateCommand<string>(OnGetAdbCommandAsync);
-            this.CancelCommand = new DelegateCommand(OnCancelCommand);
-            this.ClearCommand = new DelegateCommand(OnClearCommand);
-            this.FilterCommand = new DelegateCommand<string>(OnFilter);
-            this.CopyCommand = new DelegateCommand<string>(OnCopyAsync);
-        }
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-        private void OnCopyAsync(string text)
-            => clipBoardService.SetTextAsync(text);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-        public ICommand CopyCommand { get; }
-        private ObservableCollection<string> _Output;
-        public ObservableCollection<string> Output
-        {
-            get { return _Output; }
-            set { SetProperty(ref _Output, value, nameof(Output)); }
-        }
-
-        public ObservableCollection<string> FilterOutput
-        {
-            get
+            if (string.IsNullOrEmpty(Filter))
             {
-                if (String.IsNullOrEmpty(Filter))
-                {
-                    return _Output;
-                }
-                else
-                {
-                    return new ObservableCollection<string>(Output.Where(a => a.Contains(Filter) || String.IsNullOrEmpty(Filter)));
-                }
+                return Output.ToList();
+            }
+
+            return Output.Where(line => line.Contains(Filter, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+    }
+
+    public string Command
+    {
+        get => command;
+        set
+        {
+            if (SetProperty(ref command, value))
+            {
+                Preferences.Default.Set(nameof(Command), command);
             }
         }
+    }
 
-        private string _Command;
-        public string Command
+    public string Filter
+    {
+        get => filter;
+        set
         {
-            get { return _Command; }
-            set
+            if (SetProperty(ref filter, value))
             {
-                SetProperty(ref _Command, value, nameof(Command));
-                Preferences.Set(nameof(Command), _Command);
+                OnPropertyChanged(nameof(FilterOutput));
             }
         }
+    }
 
-        private string _Filter = String.Empty;
-        public string Filter
+    public bool ProcessingAdbOutput
+    {
+        get => processingAdbOutput;
+        set => SetProperty(ref processingAdbOutput, value);
+    }
+
+    public int OutputCount
+    {
+        get => outputCount;
+        set => SetProperty(ref outputCount, value);
+    }
+
+    public ICommand GetAdbCommand { get; }
+    public ICommand ClearCommand { get; }
+    public ICommand CancelCommand { get; }
+    public ICommand CopyCommand { get; }
+
+    private async Task OnCopyAsync(string? text)
+    {
+        if (string.IsNullOrEmpty(text))
         {
-            get { return _Filter; }
-            set { SetProperty(ref _Filter, value, nameof(Filter)); }
+            return;
         }
 
-        public ICommand FilterCommand { get; }
-        private void OnFilter(string filter)
+        await clipBoardService.SetTextAsync(text);
+    }
+
+    private async Task OnGetAdbCommandAsync(string? param)
+    {
+        if (string.IsNullOrWhiteSpace(param))
         {
-            Filter = filter;
-            RaisePropertyChanged(nameof(FilterOutput));
+            return;
         }
 
-        private bool _ProcessingAdbOutput;
-        public bool ProcessingAdbOutput
+        try
         {
-            get { return _ProcessingAdbOutput; }
-            set { SetProperty(ref _ProcessingAdbOutput, value, nameof(ProcessingAdbOutput)); }
+            await semaphoreSlim.WaitAsync();
+            ProcessingAdbOutput = true;
+            adbService.StopAdbOutputAsync();
+            AddOutputLine(param);
+            _ = await adbService.GetAdbOutputAsync(param, AddOutputLine);
         }
-
-        public ICommand GetAdbCommand { get; }
-
-        private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
-
-        protected async void OnGetAdbCommandAsync(string param)
+        catch (Exception ex)
         {
-            try
-            {
-                await semaphoreSlim.WaitAsync();
-                ProcessingAdbOutput = true;
-                adbService.StopAdbOutputAsync();
-                Output.Add(param);
-                _ = await adbService.GetAdbOutputAsync(param, s => Output.Add(s));
-            }
-            catch (ArgumentException)
-            {
-                //param is empty
-            }
-            catch (Exception e)
+            MainThread.BeginInvokeOnMainThread(() =>
             {
                 Output.Clear();
-                Output.Add(e.ToString());
-            }
-            finally
-            {
-                ProcessingAdbOutput = false;
-                semaphoreSlim.Release();
-            }
+                Output.Add(ex.ToString());
+                OnPropertyChanged(nameof(FilterOutput));
+            });
         }
-
-        public ICommand ClearCommand { get; }
-
-        protected void OnClearCommand() 
-            => Output.Clear();
-
-        public ICommand CancelCommand { get; }
-
-        protected void OnCancelCommand()
+        finally
         {
-            adbService.StopAdbOutputAsync();
             ProcessingAdbOutput = false;
+            semaphoreSlim.Release();
         }
+    }
+
+    private void OnClearCommand()
+    {
+        Output.Clear();
+        OnPropertyChanged(nameof(FilterOutput));
+    }
+
+    private void OnCancelCommand()
+    {
+        adbService.StopAdbOutputAsync();
+        ProcessingAdbOutput = false;
+    }
+
+    private void AddOutputLine(string line)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            Output.Add(line);
+            OnPropertyChanged(nameof(FilterOutput));
+        });
+    }
+
+    private void OnOutputCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        OutputCount = Output.Count;
     }
 }

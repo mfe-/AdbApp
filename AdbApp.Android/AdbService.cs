@@ -1,112 +1,103 @@
-﻿using Java.IO;
+using Java.IO;
 using Java.Lang;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using Reader = Java.IO.Reader;
 
-#nullable enable
-namespace AdbApp.Droid
+namespace AdbApp.Maui.Android;
+
+public class AdbService : IAdbService
 {
-    public class AdbService : IAdbService
+    private const int BufferSize = 128;
+    private CancellationTokenSource? cancellationTokenSource;
+
+    public async Task<IList<string>> GetAdbOutputAsync(string param, Action<string>? callback = null)
     {
-        private const int bufferSize = 128;
-
-        private CancellationTokenSource? cancellationTokenSource;
-        public async Task<IList<string>> GetAdbOutputAsync(string param, Action<string>? callback = null)
+        if (string.IsNullOrWhiteSpace(param))
         {
-            if (string.IsNullOrEmpty(param)) throw new ArgumentException(nameof(param));
-            using (cancellationTokenSource = new CancellationTokenSource())
-            {
-                string[] commandParameter = param.Split(" ").Where(a => a != string.Empty).ToArray();
-
-                List<string> logs = new List<string>();
-                string workingDir = SysProp.GetProp("user.dir");
-                using (var processBuilder = new ProcessBuilder())
-                {
-                    if (!System.String.IsNullOrWhiteSpace(workingDir))
-                    {
-                        processBuilder.Directory(new Java.IO.File(workingDir));
-                    }
-
-                    processBuilder.RedirectErrorStream(true);
-                    processBuilder.Command(commandParameter);
-                    using (var process = processBuilder.Start())
-                    {
-                        if (process != null)
-                        {
-                            using (BufferedReader bufferedInputReader = new BufferedReader(
-                                     new InputStreamReader(process.InputStream)))
-                            {
-                                await ReadStreamAsync(bufferedInputReader, logs, cancellationTokenSource.Token, callback);
-                            }
-                            process.Destroy();
-                            process.Dispose();
-                        }
-                    }
-                }
-                cancellationTokenSource = null;
-                return logs;
-            }
+            throw new ArgumentException(nameof(param));
         }
-        private async Task ReadStreamAsync(Reader bufferedReader, IList<string> logs, CancellationToken cancellationToken, Action<string>? callback = null)
+
+        using (cancellationTokenSource = new CancellationTokenSource())
         {
-            string s;
-            char[] buffer = new char[bufferSize];
-            int readAmountChars = 0;
-            System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder(buffer.Length * 2);
-            do
+            string[] commandParameter = param.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+            List<string> logs = new();
+            string workingDir = SysProp.GetProp("user.dir");
+            using var processBuilder = new ProcessBuilder();
+
+            if (!string.IsNullOrWhiteSpace(workingDir))
             {
-                //wait one second for ReadAsync to return otherwise cancel
-                Task<int> readAsyncTask = bufferedReader.ReadAsync(buffer, 0, buffer.Length);
-                var completedTask = await Task.WhenAny(readAsyncTask, Task.Delay(TimeSpan.FromSeconds(1),
-                    cancellationToken));
-                if (completedTask != readAsyncTask)
+                processBuilder.Directory(new Java.IO.File(workingDir));
+            }
+
+            processBuilder.RedirectErrorStream(true);
+            processBuilder.Command(commandParameter);
+
+            using var process = processBuilder.Start();
+            if (process is not null)
+            {
+                using BufferedReader bufferedInputReader = new(new InputStreamReader(process.InputStream));
+                await ReadStreamAsync(bufferedInputReader, logs, cancellationTokenSource.Token, callback);
+                process.Destroy();
+            }
+
+            cancellationTokenSource = null;
+            return logs;
+        }
+    }
+
+    private async Task ReadStreamAsync(Reader bufferedReader, IList<string> logs, CancellationToken cancellationToken, Action<string>? callback = null)
+    {
+        char[] buffer = new char[BufferSize];
+        int readAmountChars;
+        System.Text.StringBuilder stringBuilder = new(buffer.Length * 2);
+
+        do
+        {
+            Task<int> readAsyncTask = bufferedReader.ReadAsync(buffer, 0, buffer.Length);
+            Task completedTask = await Task.WhenAny(readAsyncTask, Task.Delay(TimeSpan.FromSeconds(1), cancellationToken));
+            if (completedTask != readAsyncTask)
+            {
+                readAmountChars = 0;
+                cancellationTokenSource?.Cancel();
+            }
+            else
+            {
+                readAmountChars = readAsyncTask.Result;
+            }
+
+            for (int i = 0; i < readAmountChars; i++)
+            {
+                char c = buffer[i];
+                if (c != '\n')
                 {
-                    readAmountChars = 0;
-                    cancellationTokenSource?.Cancel();
+                    stringBuilder.Append(c);
                 }
                 else
                 {
-                    readAmountChars = readAsyncTask.Result;
+                    string line = stringBuilder.ToString();
+                    callback?.Invoke(line);
+                    logs.Add(line);
+                    stringBuilder.Clear();
                 }
-                //read from buffer array
-                for (int i = 0; i < readAmountChars; i++)
-                {
-                    char c = buffer[i];
-                    if (c != '\n')
-                    {
-                        stringBuilder.Append(c);
-                    }
-                    else
-                    {
-                        s = stringBuilder.ToString();
-                        callback?.Invoke(s);
-                        logs.Add(s);
-                        stringBuilder.Clear();
-                    }
-                }
-                buffer = new char[bufferSize];
-                //check if a cancellation was requested
-                if (cancellationToken != null && cancellationToken.IsCancellationRequested)
-                    break;
             }
-            while (readAmountChars > 0);
+
+            buffer = new char[BufferSize];
+            if (cancellationToken.IsCancellationRequested)
+            {
+                break;
+            }
         }
+        while (readAmountChars > 0);
+    }
 
-        void IAdbService.StopAdbOutputAsync()
+    public void StopAdbOutputAsync()
+    {
+        try
         {
-            try
-            {
-                cancellationTokenSource?.Cancel();
-            }
-            catch (ObjectDisposedException)
-            {
-
-            }
-
+            cancellationTokenSource?.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
         }
     }
 }

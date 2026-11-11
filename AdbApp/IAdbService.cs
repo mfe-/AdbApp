@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+namespace AdbApp.Maui;
 
-namespace AdbApp
+public interface IAdbService
 {
-    public interface IAdbService
-    {
-        Task<IList<String>> GetAdbOutputAsync(string param, Action<string>? callback = null);
+    Task<IList<string>> GetAdbOutputAsync(string param, Action<string>? callback = null);
 
-        void StopAdbOutputAsync();
-    }
+    void StopAdbOutputAsync();
 }

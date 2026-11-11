@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace AdbApp.Maui.Views;
 
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-namespace AdbApp.Views
+public partial class PredefinedCommandPage : ContentPage
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PredefinedCommandPage : ContentPage
+    public PredefinedCommandPage()
     {
-        public PredefinedCommandPage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }
